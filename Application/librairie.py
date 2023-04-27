@@ -12,7 +12,7 @@ x_train = pd.read_csv("C:/Users/Chems Ounissi/Desktop/CNN_projet/data/train.csv"
 x_test  = pd.read_csv("C:/Users/Chems Ounissi/Desktop/CNN_projet\data/test.csv")
 
 # connexion à la base de données.
-conn=pymysql.connect(host='localhost',port=int(3306),user='root', passwd='', db='neuronal_convolutif')
+conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
 
 # Fonction permettent de créer une table.
 # La fonction prend en paramètre le nom de la table et le nom de la base de données.
@@ -47,23 +47,25 @@ def create_table(table_name:str, name_bdd:str):
 # Fonction : permettent d'envoyer l'image choisis en BDD.
 # La fonction prend en paramètre : l'index de l'image, le test_set, et la connexion à la BDD.
 def send_sql_table(index:int, test=x_test, conn=conn):
+    
+    # On saisit l'image d'index dans le test set.
     test  = np.array(test)
     features = test[index]
     cursor = conn.cursor()
     
-    # Placement des colonnes de la table pour la requete
+    # Placement des colonnes de la table pour la requete.
     columns_table=[]
     for i in range(len(features)):
         columns_table.append(f"pixel{i}")
     columns_table.insert(0, "label")
     
-    # Placement des valeurs de la table pour la requete
+    # Placement des valeurs de la table pour la requete.
     values_table=[]
     for i in features:
         values_table.append(str(i))
     values_table.insert(0, '8')
     
-    # On envoie les données de l'image choisis dans la table de notre bdd
+    # On envoie les données de l'image choisis dans la table de notre bdd.
     sql = f"INSERT INTO picture_predict ({', '.join(columns_table)}) VALUES ({', '.join(['%s' for i in range(785)])})"
     cursor.execute(sql, values_table)
     conn.commit()
@@ -78,7 +80,7 @@ def print_image(index:int, test=x_test, n_image=int):
     img  = test[index]
     img  = img.reshape((28, 28))
     
-    # Affichage de l'image avec le boutton
+    # Affichage de l'image avec le bouton
     st.image(img, width=80)
     if st.button('choisir', key=f'image_{n_image}'):
         st.write(f"Vous avez choisi image d'index {n_image}.")

@@ -45,7 +45,7 @@ def create_table(table_name:str, name_bdd:str):
 
     
 # Fonction : permettent d'envoyer l'image choisis en BDD.
-# La fonction prend en paramètre : ...
+# La fonction prend en paramètre : l'index de l'image, le test_set, et la connexion à la BDD.
 def send_sql_table(index:int, test=x_test, conn=conn):
     test  = np.array(test)
     features = test[index]
@@ -58,14 +58,14 @@ def send_sql_table(index:int, test=x_test, conn=conn):
     columns_table.insert(0, "label")
     
     # Placement des valeurs de la table pour la requete
-    value_table=[]
+    values_table=[]
     for i in features:
-        value_table.append(str(i))
-    value_table.insert(0, '8')
+        values_table.append(str(i))
+    values_table.insert(0, '8')
     
     # On envoie les données de l'image choisis dans la table de notre bdd
     sql = f"INSERT INTO picture_predict ({', '.join(columns_table)}) VALUES ({', '.join(['%s' for i in range(785)])})"
-    cursor.execute(sql, value_table)
+    cursor.execute(sql, values_table)
     conn.commit()
     conn.close()
     

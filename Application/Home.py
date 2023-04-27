@@ -20,7 +20,7 @@ def main():
     with col1:
         for i in (1,2,3,4):
             print_image(index=i, n_image=i)
-
+            
     with col2:
         for i in (5,6,7,8):
             print_image(index=i, n_image=i)

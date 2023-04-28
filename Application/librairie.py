@@ -26,7 +26,8 @@ conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', d
 # importation du modèle 
 model = tf.keras.models.load_model("C:/Users/Chems Ounissi/Desktop/CNN_projet/my_model2.h5")
 
-# =========================================================================>
+
+# =========================== Les fonctions ====================================>
 
 # Fonction permettent de créer une table.
 def create_table(table_name:str, name_bdd:str):  
@@ -52,7 +53,7 @@ def print_image(index:int, test=x_test):
 
 # =========================================================================>
    
-# Fonction : permettent d'envoyer l'image choisis en BDD.
+# Fonction : permettent d'envoyer l'image choisis en BDD et d'éxécuter le modèle.
 def send_sql_table(index:int, test=x_test, model=model):
 
     conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
@@ -82,14 +83,3 @@ def send_sql_table(index:int, test=x_test, model=model):
 
 # =========================================================================>
     
-# Fonction permettent d'enclencher l'envoie de l'image en BDD.
-def save_data_to_sql_and_run_model(n_image, index):
-    if st.button('choisir', key=f'image_{n_image}'):
-        pred = send_sql_table(index=index, test=x_test)
-        return pred
-        
-
-# =========================================================================>
-
-
-

@@ -18,25 +18,15 @@ def main():
     st.write('Veuillez choisir une image...')
     
     
-    # Créer trois colonnes pour aligner les images en largeur.
-    col1, col2, col3 = st.columns(3)
+    # Affichage de l'image
+    print_image(index=1)
     
-    # Pour chaque colonne, on affiche 3 images
-    with col1:
-        for i in (1,2,3):
-            print_image(index=i, n_image=i)
-            save_data_to_sql_and_run_model(n_image=i, index=i)
-            
-    with col2:
-        for i in (5,6,7):
-            print_image(index=i, n_image=i)
-            save_data_to_sql_and_run_model(n_image=i, index=i)
+    # enregistrement de l'image dans la table en BDD. & prédiction.
+    pred = save_data_to_sql_and_run_model(n_image=1, index=1)
+    st.write(pred)
+    
 
-    with col3:
-        for i in (9,10,11):
-            print_image(index=i, n_image=i)  
-            save_data_to_sql_and_run_model(n_image=i, index=i)
-    
+
     # Affichage du titre de prédictions.
     st.header("Prédictions...")
 

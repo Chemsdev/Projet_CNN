@@ -64,7 +64,6 @@ def print_image(index:int, test=x_test, n_image=int):
     img  = img.reshape((28, 28))
     st.image(img, width=80)
     
-
 def save_data_to_sql_and_run_model(n_image, index):
     if st.button('choisir', key=f'image_{n_image}'):
         pred = send_sql_table(index=index, test=x_test)

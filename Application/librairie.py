@@ -113,6 +113,25 @@ def background(url:str):
 
 # =============================================================================>
 
+# Fonction permettent de charger des images et apporter du CSS.
+def CSS_picture(predict):
+    picture = f"image pred/{predict.item()}.jpg"
+    stylee = """
+    img {
+        border-radius: 50px;
+        transition: transform 3s ease-in-out;
+        box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.5);
+    }
+    
+    img:hover {
+        transform: scale(1.1);
+    }
+    """
+    st.write(unsafe_allow_html=False)
+    st.image(picture, width=600)
+
+# =============================================================================>
+
 # Fonction permettent d'afficher les images
 def column_picture():
     
@@ -150,23 +169,9 @@ def column_picture():
     if finish:
         st.header("Prédiction")
         st.header("")
-        # st.markdown(f"**Résultat de la prédiction : {pred.item()}**")
-        picture = f"image pred/{pred.item()}.jpg"
-        stylee = """
-        img {
-            border-radius: 50px;
-            transition: transform 3s ease-in-out;
-            box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.5);
-        }
-        
-        img:hover {
-            transform: scale(1.1);
-        }
-        """
-        st.write(unsafe_allow_html=False)
-        st.image(picture, width=600)
+        CSS_picture(predict=pred)
 
-# =============================================================================>
+# =============================================================================
 
 # Fonction permettent de supprimer le contenu d'une table
 def delete_table():
@@ -177,3 +182,6 @@ def delete_table():
     conn.commit()
     cursor.close()
     conn.close()
+    
+# =============================================================================
+

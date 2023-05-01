@@ -8,8 +8,6 @@ import base64
 import secrets
 
 
-
-
 def main():
         
     # Définir l'image de fond

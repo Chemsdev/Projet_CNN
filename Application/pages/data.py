@@ -28,6 +28,9 @@ def page_bdd():
         st.write(table.head())
         data=True
     
+    # Dimensions de notre Table.
+    st.markdown(f'**Dimensions de la table : { table.shape }**') 
+    
     # supressionn de la table
     if st.button("Supprimer les données"):
         delete_table()

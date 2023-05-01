@@ -13,6 +13,7 @@ conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', d
 
 def page_bdd():
     
+    # Titre de la page
     st.title("Notre base de données")
     st.subheader("Table de prédictions")
     
@@ -31,12 +32,15 @@ def page_bdd():
         st.write(df_final.head())
         data=True
         
+    # Bouton pour supprimer les données. 
     if st.button("Supprimer les données"):
         delete_content_tables()
     
-    # Affichage du nombre d'occurrences de chaque valeur
-    st.title(f"Analyse des Prédictions")
+    # Si les tables ne sont pas vide, on affiche l'analyse.
     if data:
+        
+        # Titre de la sous-page.
+        st.title(f"Analyse des Prédictions")
         
         # Graphique 1
         st.subheader('Les Prédictions réaliser')
@@ -48,9 +52,8 @@ def page_bdd():
         
         fig.savefig('countplot.png')  
         st.image('countplot.png')  
-
-        # Graphique 2
-        # ...
+        
+    # Sinon on renvoie un message d'erreur.
     else:
         st.error("Visualisation non disponible.")
         

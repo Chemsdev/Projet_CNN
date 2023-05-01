@@ -6,7 +6,6 @@ import streamlit as st
 import numpy as np
 import pymysql
 import pandas as pd
-import pickle
 
 # Import des utilitaires pour le modèle.
 import tensorflow as tf
@@ -24,7 +23,6 @@ conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', d
 
 # importation du modèle 
 model = tf.keras.models.load_model("C:/Users/Chems Ounissi/Desktop/CNN_projet/my_model2.h5")
-
 
 # =========================== Les fonctions ====================================>
 
@@ -122,7 +120,7 @@ def CSS_picture(predict):
 # Fonction permettent d'afficher les images
 def column_picture():
     
-    # Affichage des imagees.
+    # Affichage des images.
     col1, col2, col3 = st.columns(3)
     finish=False
     with col1:
@@ -135,17 +133,13 @@ def column_picture():
     with col2:
         for i in (0, 10, 44):
             print_image(index=i)
-            # st.write(f"image id : {i}")
-            
             if st.button("prédire", key=i):
                 pred = send_sql_table_2_tables(index=i)
                 finish=True
     
     with col3:
         for i in (4, 50, 2):
-            print_image(index=i)
-            # st.write(f"image id : {i}")
-            
+            print_image(index=i)            
             if st.button("prédire", key=i):
                 pred = send_sql_table_2_tables(index=i)
                 finish=True
@@ -158,7 +152,7 @@ def column_picture():
 
 # =============================================================================
 
-# Fonction permettent de supprimer le contenu d'une table
+# Fonction permettent de supprimer le contenu d'une table.
 def delete_table(table):
     conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
     cursor = conn.cursor()

@@ -7,14 +7,13 @@ import streamlit as st
 import numpy as np
 import pymysql
 import pandas as pd
-import pickle
 import random
 
 # Import des utilitaires pour le modèle.
 import tensorflow as tf
 from tensorflow import keras
 
-# =========================== Utilitaires ====================================>
+# =========================== Utilitaires =======================================>
 
 # Import de la data.
 x_train = pd.read_csv("C:/Users/Chems Ounissi/Desktop/CNN_projet/data/train.csv")
@@ -25,7 +24,6 @@ conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', d
 
 # importation du modèle 
 model = tf.keras.models.load_model("C:/Users/Chems Ounissi/Desktop/CNN_projet/my_model2.h5")
-
 
 # =========================== Les fonctions ====================================>
 
@@ -59,55 +57,65 @@ def create_tables_2_tables(name_bdd: str):
 
 # =============================================================================>
 
-# Fonction permettent d'enregistrer les données dans 2 tables.
+# Fonction permettent d'éxécuter le modèle et d'enregistrer les données dans 2 tables.
 def send_sql_table_2_tables(index:int, test=x_test, model=model):
 
-    # connexion à la bdd
+    # connexion à la bdd.
     conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
     
-    # sélection de l'image
+    # sélection de l'image.
     test  = np.array(test)
     features = test[index]
     cursor = conn.cursor()
     
-    # on réalise la prédiction
+    # on éxécute le modèle de prédiction.
     prediction = model.predict(((features).reshape((-1,28,28,1)))/255.0)
     prediction = np.argmax(prediction, axis=1)
     
-    # Vérifier si l'ID existe déjà dans la table 'images'
+    # Vérifier si l'ID existe déjà dans la table 'images' (on peut mettre une condition.)
     cursor.execute("SELECT id FROM images WHERE id=%s", (index,))
     result = cursor.fetchone()
     
-    # On génère code id unique
-    code_id = "".join([str(random.randint(0, 30)) for _ in range(5)])  
+    # On génère code id unique.
+    code_id = "".join([str(random.randint(0, 10)) for _ in range(5)])  
     
-    # Mise en place des colonnes et valeur à insérer.
+    #=============================== MISE EN PLACE TABLE IMAGES =====================================>
+    
+    # Mise en place des noms de colonnes de la Table.
     columns_table=[]
     for i in range(len(features)):
         columns_table.append(f"feature_{i}")
     columns_table.insert(0, "id")
     
+    # Mise en places des données à insérer dans la table.
     values_table=[]
     for i in features:
         values_table.append(str(i))
     values_table.insert(0, str(code_id))
     
-    # Insertion des features dans la table images
+    # Insertion des features dans la table images.
     sql = f"INSERT INTO images ({', '.join(columns_table)}) VALUES ({', '.join(['%s' for i in range(785)])})"
     cursor.execute(sql, values_table)
     
-    # Insertion des résultats dans la table predictions.
-    # pour l'instant on met une valeur arbitraire (v)
+    # =============================== MISE EN PLACE TABLE PREDICTIONS ===============================>
+     
+    # pour l'instant on met une valeur arbitraire (v).
     v=random.randint(0, 10)
-    columns_table =  ["id",     "index_image", "y_true",   "y_pred",               "image_id"]
-    values_table  =  [code_id,  index,          v,         str(prediction.item()),  code_id  ]  
+    
+    # Préparation des données à l'envoie.
+    columns_table =  ["id",     "index_image",  "y_true",   "y_pred",               "image_id"]
+    values_table  =  [code_id,  index,           v,         str(prediction.item()),  code_id  ]  
+    
+    # Insertion des résultats dans la table predictions.
     sql = f"INSERT INTO predictions ({', '.join(columns_table)}) VALUES ({', '.join(['%s' for i in range(5)])})"
     cursor.execute(sql, values_table)
     
+    # Fermeture de la connexion.
     conn.commit()
     conn.close()
+    
+    # On retourne la prédiction.
     return prediction
-
 
 # =============================================================================>
 

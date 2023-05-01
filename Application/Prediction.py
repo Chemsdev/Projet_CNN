@@ -17,7 +17,9 @@ def main():
         h1 {
             font-family: 'Comic Sans MS', cursive, sans-serif;
             color: #FD942F;
+            text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
         }
+        
     </style>
     """, unsafe_allow_html=True)
     
@@ -29,10 +31,10 @@ def main():
 
     # Accueil (titre & header).
     st.title("Réseau neuronal Convolutif")
-    st.header("Accueil")  
     
     # message pour l'utilisteur
-    st.markdown('**Veuillez choisir une image...**')
+    st.subheader('**Choissisez une image pour tester !**')
+    st.subheader("")
     
     # Affichage des images
     column_picture()

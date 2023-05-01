@@ -1,8 +1,5 @@
 
 # Import des librairies.
-from sqlalchemy import create_engine
-from sqlalchemy import inspect
-from sqlalchemy import create_engine, MetaData, Table
 import streamlit as st
 import numpy as np
 import pymysql

@@ -146,8 +146,8 @@ def column_picture():
     
     # Affichage du résultat.
     if finish:
-        st.header("Prédiction")
-        st.header("")
+        st.title("Prédictions...")
+        st.subheader(f"Le modèle à trouver !")
         CSS_picture(predict=pred)
 
 # =============================================================================

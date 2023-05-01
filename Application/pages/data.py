@@ -29,9 +29,8 @@ def page_bdd():
         data=True
     
     # supressionn de la table
-    if st.button("Nettoyer la table"):
+    if st.button("Supprimer les données"):
         delete_table()
-
 
     # Affichage du nombre d'occurrences de chaque valeur
     st.header(f"Exploration des Prédictions")
@@ -46,8 +45,5 @@ def page_bdd():
     else:
         st.error("Visualisation non disponible.")
         
-
-
-
 page_bdd()
 

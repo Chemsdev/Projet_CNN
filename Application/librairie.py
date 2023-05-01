@@ -47,9 +47,21 @@ def create_table(table_name:str, name_bdd:str):
    
 # Fonction : permettent d'afficher une image sur notre site web.
 def print_image(index:int, test=x_test):
+    style = """
+    img {
+        border-radius: 5px;
+        transition: transform 0s ease-in-out;
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+    }
+    
+    img:hover {
+        transform: scale(1.1);
+    }
+    """
     test = np.array(test)
     img  = test[index]
     img  = img.reshape((28, 28))
+    st.write(f'<style>{style}</style>', unsafe_allow_html=True)
     st.image(img, width=80)
 
 # =============================================================================>
@@ -104,13 +116,13 @@ def background(url:str):
 # Fonction permettent d'afficher les images
 def column_picture():
     
+    # Affichage des imagees.
     col1, col2, col3 = st.columns(3)
     finish=False
-    
     with col1:
         for i in range(395, 399):
             print_image(index=i)
-            st.write(f"image id : {i}")
+            # st.write(f"image id : {i}")
             
             if st.button("prédire", key=i):
                 pred = send_sql_table(index=i)
@@ -119,7 +131,7 @@ def column_picture():
     with col2:
         for i in range(335, 339):
             print_image(index=i)
-            st.write(f"image id : {i}")
+            # st.write(f"image id : {i}")
             
             if st.button("prédire", key=i):
                 pred = send_sql_table(index=i)
@@ -128,16 +140,32 @@ def column_picture():
     with col3:
         for i in range(355, 359):
             print_image(index=i)
-            st.write(f"image id : {i}")
+            # st.write(f"image id : {i}")
             
             if st.button("prédire", key=i):
                 pred = send_sql_table(index=i)
                 finish=True
-        
+    
+    # Affichage du résultat.
     if finish:
         st.header("Prédiction")
-        st.markdown(f"**Résultat de la prédiction : {pred.item()}**")
+        st.header("")
+        # st.markdown(f"**Résultat de la prédiction : {pred.item()}**")
+        picture = f"image pred/{pred.item()}.jpg"
+        stylee = """
+        img {
+            border-radius: 50px;
+            transition: transform 3s ease-in-out;
+            box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.5);
+        }
         
+        img:hover {
+            transform: scale(1.1);
+        }
+        """
+        st.write(unsafe_allow_html=False)
+        st.image(picture, width=600)
+
 # =============================================================================>
 
 # Fonction permettent de supprimer le contenu d'une table

@@ -10,6 +10,7 @@ import pickle
 
 # Import des utilitaires pour le modèle.
 import tensorflow as tf
+import random
 from tensorflow import keras
 
 
@@ -42,7 +43,7 @@ def create_table(table_name:str, name_bdd:str):
         df.to_sql(name=table_name, con=engine, if_exists='fail', index=False)
     print(f"Création de la table {table_name} avec succès.")
 
-# =========================================================================>
+# =============================================================================>
    
 # Fonction : permettent d'afficher une image sur notre site web.
 def print_image(index:int, test=x_test):
@@ -51,7 +52,7 @@ def print_image(index:int, test=x_test):
     img  = img.reshape((28, 28))
     st.image(img, width=80)
 
-# =========================================================================>
+# =============================================================================>
    
 # Fonction : permettent d'envoyer l'image choisis en BDD et d'éxécuter le modèle.
 def send_sql_table(index:int, test=x_test, model=model):
@@ -72,7 +73,7 @@ def send_sql_table(index:int, test=x_test, model=model):
     values_table=[]
     for i in features:
         values_table.append(str(i))
-    values_table.insert(0, prediction)
+    values_table.insert(0, prediction.item())
     
     sql = f"INSERT INTO picture_predict ({', '.join(columns_table)}) VALUES ({', '.join(['%s' for i in range(785)])})"
     cursor.execute(sql, values_table)
@@ -81,5 +82,70 @@ def send_sql_table(index:int, test=x_test, model=model):
     
     return prediction
 
-# =========================================================================>
+# =============================================================================>
+
+# Fonction permettent de placer une image de fond pour site web.
+def background(url:str):
+    st.markdown(
+         f"""
+         <style>
+         .stApp {{
+             background-image: url({url});
+             background-attachment: fixed;
+             background-size: cover
+         }}
+         </style>
+         """,
+         unsafe_allow_html=True
+    )
+
+# =============================================================================>
+
+# Fonction permettent d'afficher les images
+def column_picture():
     
+    col1, col2, col3 = st.columns(3)
+    finish=False
+    
+    with col1:
+        for i in range(395, 399):
+            print_image(index=i)
+            st.write(f"image id : {i}")
+            
+            if st.button("prédire", key=i):
+                pred = send_sql_table(index=i)
+                finish=True
+                
+    with col2:
+        for i in range(335, 339):
+            print_image(index=i)
+            st.write(f"image id : {i}")
+            
+            if st.button("prédire", key=i):
+                pred = send_sql_table(index=i)
+                finish=True
+    
+    with col3:
+        for i in range(355, 359):
+            print_image(index=i)
+            st.write(f"image id : {i}")
+            
+            if st.button("prédire", key=i):
+                pred = send_sql_table(index=i)
+                finish=True
+        
+    if finish:
+        st.header("Prédiction")
+        st.markdown(f"**Résultat de la prédiction : {pred.item()}**")
+        
+# =============================================================================>
+
+# Fonction permettent de supprimer le contenu d'une table
+def delete_table():
+    conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
+    cursor = conn.cursor()
+    delete_query = "DELETE FROM picture_predict;"
+    cursor.execute(delete_query)
+    conn.commit()
+    cursor.close()
+    conn.close()

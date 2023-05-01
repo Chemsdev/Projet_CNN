@@ -13,8 +13,6 @@ import tensorflow as tf
 from tensorflow import keras
 from bdd_2_tables import send_sql_table_2_tables
 
-
-
 # =========================== Utilitaires ====================================>
 
 # Import de la data.
@@ -128,16 +126,14 @@ def column_picture():
     col1, col2, col3 = st.columns(3)
     finish=False
     with col1:
-        for i in range(195, 199):
-            print_image(index=i)
-            # st.write(f"image id : {i}")
-            
+        for i in (17, 12, 5):
+            print_image(index=i)            
             if st.button("prédire", key=i):
                 pred = send_sql_table_2_tables(index=i)
                 finish=True
                 
     with col2:
-        for i in range(110, 114):
+        for i in (0, 10, 44):
             print_image(index=i)
             # st.write(f"image id : {i}")
             
@@ -146,7 +142,7 @@ def column_picture():
                 finish=True
     
     with col3:
-        for i in range(490, 494):
+        for i in (4, 50, 2):
             print_image(index=i)
             # st.write(f"image id : {i}")
             

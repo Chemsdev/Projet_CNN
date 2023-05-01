@@ -77,35 +77,34 @@ def send_sql_table_2_tables(index:int, test=x_test, model=model):
     cursor.execute("SELECT id FROM images WHERE id=%s", (index,))
     result = cursor.fetchone()
     
-    # Si l'id n'est pas présent, on envoie les données dans la BDD.
-    if result is None:
-        
-        # Mise en place des colonnes et valeur à insérer.
-        columns_table=[]
-        for i in range(len(features)):
-            columns_table.append(f"feature_{i}")
-        columns_table.insert(0, "id")
-        
-        values_table=[]
-        for i in features:
-            values_table.append(str(i))
-        values_table.insert(0, str(index))
-        
-        # Insertion des features dans la table images
-        sql = f"INSERT INTO images ({', '.join(columns_table)}) VALUES ({', '.join(['%s' for i in range(785)])})"
-        cursor.execute(sql, values_table)
-        
-        # Insertion des résultats dans la table predictions.
-        v=random.randint(0,10)
-        columns_table = ["y_true", "y_pred", "image_id"]
-        values_table = [v, str(prediction.item()), str(index)]
-        sql = f"INSERT INTO predictions ({', '.join(columns_table)}) VALUES ({', '.join(['%s' for i in range(3)])})"
-        cursor.execute(sql, values_table)
-        
-        conn.commit()
-        conn.close()
-    else:
-        pass
+    # On génère code id unique
+    code_id = "".join([str(random.randint(0, 30)) for _ in range(5)])  
+    
+    # Mise en place des colonnes et valeur à insérer.
+    columns_table=[]
+    for i in range(len(features)):
+        columns_table.append(f"feature_{i}")
+    columns_table.insert(0, "id")
+    
+    values_table=[]
+    for i in features:
+        values_table.append(str(i))
+    values_table.insert(0, str(code_id))
+    
+    # Insertion des features dans la table images
+    sql = f"INSERT INTO images ({', '.join(columns_table)}) VALUES ({', '.join(['%s' for i in range(785)])})"
+    cursor.execute(sql, values_table)
+    
+    # Insertion des résultats dans la table predictions.
+    # pour l'instant on met une valeur arbitraire (v)
+    v=random.randint(0, 10)
+    columns_table = ["y_true", "y_pred", "image_id"]
+    values_table = [v, str(prediction.item()), code_id]
+    sql = f"INSERT INTO predictions ({', '.join(columns_table)}) VALUES ({', '.join(['%s' for i in range(3)])})"
+    cursor.execute(sql, values_table)
+    
+    conn.commit()
+    conn.close()
     return prediction
 
 

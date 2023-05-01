@@ -27,7 +27,7 @@ def page_bdd():
         st.error("Base de données vide !")
     else:
         df_final = table_predictions.merge(table_images, left_on='image_id', right_on='id')
-        df_final = df_final.drop(["id_x", "id_y"], axis=1)
+        df_final = df_final.drop(["id_x", "id_y","image_id"], axis=1)
         st.write(df_final.head())
         data=True
         
@@ -50,15 +50,7 @@ def page_bdd():
         st.image('countplot.png')  
 
         # Graphique 2
-        df_final['y_pred'] = pd.to_numeric(df_final['y_pred'])
-        df_final['y_true'] = pd.to_numeric(df_final['y_true'])
-        df_final['prediction_correcte'] = df_final['y_pred'] == df_final['y_true']
-        df_final['prediction_correcte'] = pd.Categorical(df_final['prediction_correcte'], categories=[True, False])
-        st.subheader('Comparaison entre le vrai Y et le Y prédit')
-        fig, ax = plt.subplots()
-        sns.barplot(data=df_final, x="y_pred", y="y_true", hue="prediction_correcte", ax=ax)
-        ax.legend(title="Prédiction correcte")
-        st.pyplot(fig)
+        # ...
     
         
     else:

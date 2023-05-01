@@ -47,6 +47,7 @@ def create_tables_2_tables(name_bdd: str):
     cursor.execute('''CREATE TABLE IF NOT EXISTS predictions
                 (id int NOT NULL DEFAULT 0,
                 y_true TEXT,
+                index_image TEXT,
                 y_pred TEXT,
                 image_id INTEGER,
                 FOREIGN KEY (image_id) REFERENCES images(id))''')
@@ -98,9 +99,9 @@ def send_sql_table_2_tables(index:int, test=x_test, model=model):
     # Insertion des résultats dans la table predictions.
     # pour l'instant on met une valeur arbitraire (v)
     v=random.randint(0, 10)
-    columns_table = ["y_true", "y_pred", "image_id"]
-    values_table = [v, str(prediction.item()), code_id]
-    sql = f"INSERT INTO predictions ({', '.join(columns_table)}) VALUES ({', '.join(['%s' for i in range(3)])})"
+    columns_table =  ["id",     "index_image", "y_true",   "y_pred",               "image_id"]
+    values_table  =  [code_id,  index,          v,         str(prediction.item()),  code_id  ]  
+    sql = f"INSERT INTO predictions ({', '.join(columns_table)}) VALUES ({', '.join(['%s' for i in range(5)])})"
     cursor.execute(sql, values_table)
     
     conn.commit()

@@ -113,22 +113,11 @@ def background(url:str):
 
 # =============================================================================>
 
-# Fonction permettent de charger des images et apporter du CSS.
+# Fonction permettent de charger des images en local.
 def CSS_picture(predict):
     picture = f"image pred/{predict.item()}.jpg"
-    stylee = """
-    img {
-        border-radius: 50px;
-        transition: transform 3s ease-in-out;
-        box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.5);
-    }
-    
-    img:hover {
-        transform: scale(1.1);
-    }
-    """
     st.write(unsafe_allow_html=False)
-    st.image(picture, width=600)
+    st.image(picture, width=300)
 
 # =============================================================================>
 

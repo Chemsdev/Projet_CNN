@@ -10,8 +10,8 @@ import pickle
 
 # Import des utilitaires pour le modèle.
 import tensorflow as tf
-import random
 from tensorflow import keras
+from bdd_2_tables import send_sql_table_2_tables
 
 
 
@@ -133,7 +133,7 @@ def column_picture():
             # st.write(f"image id : {i}")
             
             if st.button("prédire", key=i):
-                pred = send_sql_table(index=i)
+                pred = send_sql_table_2_tables(index=i)
                 finish=True
                 
     with col2:
@@ -142,7 +142,7 @@ def column_picture():
             # st.write(f"image id : {i}")
             
             if st.button("prédire", key=i):
-                pred = send_sql_table(index=i)
+                pred = send_sql_table_2_tables(index=i)
                 finish=True
     
     with col3:
@@ -151,7 +151,7 @@ def column_picture():
             # st.write(f"image id : {i}")
             
             if st.button("prédire", key=i):
-                pred = send_sql_table(index=i)
+                pred = send_sql_table_2_tables(index=i)
                 finish=True
     
     # Affichage du résultat.
@@ -163,14 +163,13 @@ def column_picture():
 # =============================================================================
 
 # Fonction permettent de supprimer le contenu d'une table
-def delete_table():
+def delete_table(table):
     conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
     cursor = conn.cursor()
-    delete_query = "DELETE FROM picture_predict;"
+    delete_query = f"DELETE FROM {table};"
     cursor.execute(delete_query)
     conn.commit()
     cursor.close()
     conn.close()
     
 # =============================================================================
-

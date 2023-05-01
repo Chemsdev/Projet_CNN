@@ -1,6 +1,7 @@
 # Import des utilitaires.
 import streamlit as st 
 from librairie import create_table, background, column_picture
+from bdd_2_tables import create_tables_2_tables
 import numpy as np
 import random
 from PIL import Image
@@ -24,7 +25,7 @@ def main():
     background(url="https://wallpaper.dog/large/10707630.jpg")
     
     # Création de la table.
-    create_table(table_name="picture_predict", name_bdd="neuronal_convolutif")
+    create_tables_2_tables(name_bdd="neuronal_convolutif")
     
     # Accueil (titre & header).
     st.title("Réseau neuronal Convolutif")

@@ -18,30 +18,24 @@ def page_bdd():
     
     # affichage du background + connexion à la base
     background(url="https://wallpaper.dog/large/10707630.jpg")
-    table=pd.read_sql_query("SELECT * FROM picture_predict ", conn)
+    table_images=pd.read_sql_query("SELECT * FROM images ", conn)
+    table_predictions=pd.read_sql_query("SELECT * FROM predictions ", conn)
     data=False
     
     # Si la table est vide, on envoie un message d'erreur.
-    if table.empty:
+    if table_images.empty or  table_predictions.empty:
         st.error("Base de données vide !")
     else:
-        st.write(table.head())
+        df_joined = table_predictions.merge(table_images, left_on='image_id', right_on='id')
+        df_joined = df_joined.drop(["id_x", "id_y"], axis=1)
+        st.write(df_joined.head())
         data=True
     
-    # Dimensions de notre Table.
-    st.markdown(f'**Dimensions de la table : { table.shape }**') 
-    
-    # supressionn de la table
-    if st.button("Supprimer les données"):
-        delete_table()
-
     # Affichage du nombre d'occurrences de chaque valeur
     st.header(f"Exploration des Prédictions")
-
-    # On affiche les graphpiques ou on renvoit l'utilisateur à la page prédiction.
     if data:
         sns.set_style('dark')
-        fig = sns.countplot(x='label', data=table)
+        fig = sns.countplot(x='y_pred', data=df_joined)
         fig = fig.get_figure()  
         fig.savefig('countplot.png')  
         st.image('countplot.png')  
@@ -49,4 +43,5 @@ def page_bdd():
         st.error("Visualisation non disponible.")
         
 page_bdd()
+
 

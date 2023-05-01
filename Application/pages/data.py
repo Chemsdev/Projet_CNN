@@ -35,7 +35,7 @@ def page_bdd():
         delete_content_tables()
     
     # Affichage du nombre d'occurrences de chaque valeur
-    st.title(f"Exploration des Prédictions")
+    st.title(f"Analyse des Prédictions")
     if data:
         
         # Graphique 1
@@ -51,8 +51,6 @@ def page_bdd():
 
         # Graphique 2
         # ...
-    
-        
     else:
         st.error("Visualisation non disponible.")
         

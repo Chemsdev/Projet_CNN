@@ -2,11 +2,13 @@
 # Import des librairies.
 from sqlalchemy import create_engine
 from sqlalchemy import inspect
+from sqlalchemy import create_engine, MetaData, Table
 import streamlit as st
 import numpy as np
 import pymysql
 import pandas as pd
 import pickle
+import random
 
 # Import des utilitaires pour le modèle.
 import tensorflow as tf
@@ -54,6 +56,7 @@ def create_tables_2_tables(name_bdd: str):
     conn.commit()
     conn.close()
 
+# =============================================================================>
 
 # Fonction permettent d'enregistrer les données dans 2 tables.
 def send_sql_table_2_tables(index:int, test=x_test, model=model):
@@ -93,8 +96,9 @@ def send_sql_table_2_tables(index:int, test=x_test, model=model):
         cursor.execute(sql, values_table)
         
         # Insertion des résultats dans la table predictions.
+        v=random.randint(0,10)
         columns_table = ["y_true", "y_pred", "image_id"]
-        values_table = ["NaN", str(prediction.item()), str(index)]
+        values_table = [v, str(prediction.item()), str(index)]
         sql = f"INSERT INTO predictions ({', '.join(columns_table)}) VALUES ({', '.join(['%s' for i in range(3)])})"
         cursor.execute(sql, values_table)
         
@@ -105,4 +109,16 @@ def send_sql_table_2_tables(index:int, test=x_test, model=model):
     return prediction
 
 
+# =============================================================================>
 
+# Fonction permettent de supprimer 2 tables.
+def delete_content_tables():
+    conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM predictions")
+    cursor.execute("DELETE FROM images")
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+# =============================================================================>

@@ -24,7 +24,7 @@ def main():
     # background de notre site web.
     background(url="https://wallpaper.dog/large/10707630.jpg")
     
-    # Création de la table.
+    # Création des 2 tables.
     create_tables_2_tables(name_bdd="neuronal_convolutif")
     
     # Accueil (titre & header).

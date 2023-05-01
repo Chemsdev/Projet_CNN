@@ -128,7 +128,7 @@ def column_picture():
     col1, col2, col3 = st.columns(3)
     finish=False
     with col1:
-        for i in range(395, 399):
+        for i in range(195, 199):
             print_image(index=i)
             # st.write(f"image id : {i}")
             
@@ -137,7 +137,7 @@ def column_picture():
                 finish=True
                 
     with col2:
-        for i in range(335, 339):
+        for i in range(110, 114):
             print_image(index=i)
             # st.write(f"image id : {i}")
             
@@ -146,7 +146,7 @@ def column_picture():
                 finish=True
     
     with col3:
-        for i in range(355, 359):
+        for i in range(490, 494):
             print_image(index=i)
             # st.write(f"image id : {i}")
             

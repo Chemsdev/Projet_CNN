@@ -13,6 +13,23 @@ conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', d
 
 def analyse():
     
+    # Définition l'image de fond.
+    st.markdown("""
+    <style>
+        body {
+        background-image: url("data:image/png;base64,%s");
+        background-size: cover;
+        }
+        
+        h1 {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #FD942F;
+            text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+    </style>
+    """, unsafe_allow_html=True)
+    
     # Titre de la page.
     st.title("Notre base de données")
     st.subheader("Table de prédictions")

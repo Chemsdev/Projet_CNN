@@ -79,15 +79,11 @@ def send_sql_table_2_tables(index:int, test=x_test, model=model):
     #=============================== MISE EN PLACE TABLE IMAGES =====================================>
     
     # Mise en place des noms de colonnes de la Table.
-    columns_table=[]
-    for i in range(len(features)):
-        columns_table.append(f"feature_{i}")
+    columns_table=[f"feature_{i}"for i in range(len(features))]
     columns_table.insert(0, "id")
     
     # Mise en places des données à insérer dans la table.
-    values_table=[]
-    for i in features:
-        values_table.append(str(i))
+    values_table=[str(i) for i in features]
     values_table.insert(0, str(code_id))
     
     # Insertion des features dans la table images.
@@ -127,3 +123,18 @@ def delete_content_tables():
     conn.close()
 
 # =============================================================================>
+
+
+
+# code ou cas ou.
+# Mise en place des noms de colonnes de la Table.
+# columns_table=[]
+# for i in range(len(features)):
+#     columns_table.append(f"feature_{i}")
+# columns_table.insert(0, "id")
+
+# Mise en places des données à insérer dans la table.
+# values_table=[]
+# for i in features:
+#     values_table.append(str(i))
+# values_table.insert(0, str(code_id))

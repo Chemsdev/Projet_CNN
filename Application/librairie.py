@@ -117,6 +117,26 @@ def CSS_picture(predict):
 
 # =============================================================================>
 
+# Fonction permettent d'apporter du CSS à nos pages
+def css_page():
+    st.markdown("""
+    <style>
+        body {
+        background-image: url("data:image/png;base64,%s");
+        background-size: cover;
+        }
+        
+        h1 {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #FD942F;
+            text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+    </style>
+    """, unsafe_allow_html=True)
+
+# =============================================================================>
+
 # Fonction permettent d'afficher les images
 def column_picture():
     

@@ -55,6 +55,7 @@ def analyse():
         plt.ylabel("Compte des cibles prédites")
         fig.savefig('countplot.png')  
         st.image('countplot.png')  
+        st.markdown(f"**Vous avez fait {df_final.shape[0]} prédictions(s)** !")
         
     # Sinon on renvoie un message d'erreur.
     else:

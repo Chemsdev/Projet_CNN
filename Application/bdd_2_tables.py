@@ -126,15 +126,3 @@ def delete_content_tables():
 
 
 
-# code ou cas ou.
-# Mise en place des noms de colonnes de la Table.
-# columns_table=[]
-# for i in range(len(features)):
-#     columns_table.append(f"feature_{i}")
-# columns_table.insert(0, "id")
-
-# Mise en places des données à insérer dans la table.
-# values_table=[]
-# for i in features:
-#     values_table.append(str(i))
-# values_table.insert(0, str(code_id))

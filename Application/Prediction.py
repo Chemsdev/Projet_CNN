@@ -6,7 +6,7 @@ import numpy as np
 
 def main():
     
-    # Css pour la page.  
+    # Apporter du CSS à ma page.
     css_page()
     
     # Background de notre site web.

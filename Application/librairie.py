@@ -73,7 +73,7 @@ def CSS_picture(predict):
 
 # =============================================================================>
 
-# Fonction permettent d'apporter du CSS à nos pages
+# Fonction permettent d'apporter du CSS à nos pages.
 def css_page():
     st.markdown("""
     <style>
@@ -93,7 +93,7 @@ def css_page():
 
 # =============================================================================>
 
-# Fonction permettent d'afficher les images
+# Fonction permettent d'afficher les images et le résultat de la prédiction.
 def column_picture():
     
     # Affichage des images.
@@ -140,19 +140,6 @@ def column_picture():
             y_true     = "oui"
         )
         
-        
-# =============================================================================
-
-# Fonction permettent de supprimer le contenu d'une table.
-def delete_table(table):
-    conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
-    cursor = conn.cursor()
-    delete_query = f"DELETE FROM {table};"
-    cursor.execute(delete_query)
-    conn.commit()
-    cursor.close()
-    conn.close()
-    
 # =============================================================================
 
 # Fonction permettent d'utiliser le modèle.

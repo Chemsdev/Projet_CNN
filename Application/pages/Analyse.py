@@ -13,6 +13,7 @@ conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', d
 
 def analyse():
     
+    # Apporter du CSS à ma page.
     css_page()
     
     # Titre de la page.

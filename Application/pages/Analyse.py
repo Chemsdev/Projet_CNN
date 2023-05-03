@@ -5,7 +5,7 @@ import pandas as pd
 import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
-from bdd_2_tables import delete_content_tables
+from bdd import delete_content_tables
 
 # connexion à la base de données.
 conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
@@ -13,6 +13,7 @@ conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', d
 
 def analyse():
     
+    # Apporter du CSS à ma page.
     css_page()
     
     # Titre de la page.

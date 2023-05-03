@@ -9,7 +9,6 @@ import random
 # Import des utilitaires pour le modèle.
 import tensorflow as tf
 from tensorflow import keras
-
 # =========================== Utilitaires =======================================>
 
 # Import de la data.
@@ -23,6 +22,7 @@ conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', d
 model = tf.keras.models.load_model("C:/Users/Chems Ounissi/Desktop/CNN_projet/my_model2.h5")
 
 # =========================== Les fonctions ====================================>
+
 
 # Fonction permettent de créer 2 tables.
 def create_tables_2_tables(name_bdd: str):
@@ -55,23 +55,12 @@ def create_tables_2_tables(name_bdd: str):
 # =============================================================================>
 
 # Fonction permettent d'éxécuter le modèle et d'enregistrer les données dans 2 tables.
-def send_sql_table_2_tables(index:int, test=x_test, model=model):
-
+def send_sql_table_2_tables(prediction, index:int, features, y_true="oui"):
+    
+    
     # connexion à la bdd.
     conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
-    
-    # sélection de l'image.
-    test  = np.array(test)
-    features = test[index]
     cursor = conn.cursor()
-    
-    # on éxécute le modèle de prédiction.
-    prediction = model.predict(((features).reshape((-1,28,28,1)))/255.0)
-    prediction = np.argmax(prediction, axis=1)
-    
-    # Vérifier si l'ID existe déjà dans la table 'images' (on peut mettre une condition.)
-    cursor.execute("SELECT id FROM images WHERE id=%s", (index,))
-    result = cursor.fetchone()
     
     # On génère code id unique.
     code_id = "".join([str(random.randint(0, 10)) for _ in range(5)])  
@@ -91,13 +80,10 @@ def send_sql_table_2_tables(index:int, test=x_test, model=model):
     cursor.execute(sql, values_table)
     
     # =============================== MISE EN PLACE TABLE PREDICTIONS ===============================>
-     
-    # pour l'instant on met une valeur arbitraire (v).
-    v=random.randint(0, 10)
     
     # Préparation des données à l'envoie.
-    columns_table =  ["id",     "index_image",  "y_true",   "y_pred",               "image_id"]
-    values_table  =  [code_id,  index,           v,         str(prediction.item()),  code_id  ]  
+    columns_table =  ["id",     "index_image",  "y_true",   "y_pred",                "image_id"]
+    values_table  =  [code_id,   index,          y_true,     str(prediction.item()),  code_id  ]  
     
     # Insertion des résultats dans la table predictions.
     sql = f"INSERT INTO predictions ({', '.join(columns_table)}) VALUES ({', '.join(['%s' for i in range(5)])})"
@@ -123,6 +109,5 @@ def delete_content_tables():
     conn.close()
 
 # =============================================================================>
-
 
 

@@ -1,14 +1,15 @@
 # Import des utilitaires.
 import streamlit as st 
 from librairie import background, column_picture, css_page
-from bdd_2_tables import create_tables_2_tables
+from bdd import create_tables_2_tables
 import numpy as np
 
 def main():
-        
+    
+    # Apporter du CSS à ma page.
     css_page()
     
-    # background de notre site web.
+    # Background de notre site web.
     background(url="https://wallpaper.dog/large/10707630.jpg")
     
     # Création des 2 tables.

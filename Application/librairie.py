@@ -10,7 +10,7 @@ import pandas as pd
 # Import des utilitaires pour le modèle.
 import tensorflow as tf
 from tensorflow import keras
-from bdd_2_tables import send_sql_table_2_tables
+from bdd import send_sql_table_2_tables
 
 # =========================== Utilitaires ====================================>
 
@@ -25,21 +25,6 @@ conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', d
 model = tf.keras.models.load_model("C:/Users/Chems Ounissi/Desktop/CNN_projet/my_model2.h5")
 
 # =========================== Les fonctions ====================================>
-
-# Fonction permettent de créer une table.
-def create_table(table_name:str, name_bdd:str):  
-    engine=create_engine(f'mysql+pymysql://root:@localhost/{name_bdd}')
-    inspector=inspect(engine)
-    if not table_name in inspector.get_table_names():
-        df = pd.DataFrame({f'pixel{i}':[] for i in range(0,784)})
-        for i in df:
-            df[i]=df[i].astype('int64')
-        label = ''
-        df.insert(loc=0, column='label', value=label)
-        df.to_sql(name=table_name, con=engine, if_exists='fail', index=False)
-    print(f"Création de la table {table_name} avec succès.")
-
-# =============================================================================>
    
 # Fonction : permettent d'afficher une image sur notre site web.
 def print_image(index:int, test=x_test):
@@ -55,40 +40,11 @@ def print_image(index:int, test=x_test):
     }
     """
     test = np.array(test)
-    img  = test[index]
-    img  = img.reshape((28, 28))
+    features  = test[index]
+    img  = features.reshape((28, 28))
     st.write(f'<style>{style}</style>', unsafe_allow_html=True)
     st.image(img, width=80)
-
-# =============================================================================>
-   
-# Fonction : permettent d'envoyer l'image choisis en BDD et d'éxécuter le modèle.
-def send_sql_table(index:int, test=x_test, model=model):
-
-    conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
-    test  = np.array(test)
-    features = test[index]
-    cursor = conn.cursor()
-    
-    prediction = model.predict(((features).reshape((-1,28,28,1)))/255.0)
-    prediction = np.argmax(prediction, axis=1)
-    
-    columns_table=[]
-    for i in range(len(features)):
-        columns_table.append(f"pixel{i}")
-    columns_table.insert(0, "label")
-    
-    values_table=[]
-    for i in features:
-        values_table.append(str(i))
-    values_table.insert(0, prediction.item())
-    
-    sql = f"INSERT INTO picture_predict ({', '.join(columns_table)}) VALUES ({', '.join(['%s' for i in range(785)])})"
-    cursor.execute(sql, values_table)
-    conn.commit()
-    conn.close()
-    
-    return prediction
+    return features
 
 # =============================================================================>
 
@@ -117,7 +73,7 @@ def CSS_picture(predict):
 
 # =============================================================================>
 
-# Fonction permettent d'apporter du CSS à nos pages
+# Fonction permettent d'apporter du CSS à nos pages.
 def css_page():
     st.markdown("""
     <style>
@@ -137,50 +93,57 @@ def css_page():
 
 # =============================================================================>
 
-# Fonction permettent d'afficher les images
+# Fonction permettent d'afficher les images et le résultat de la prédiction.
 def column_picture():
     
     # Affichage des images.
     col1, col2, col3 = st.columns(3)
     finish=False
+    keep_index=0
+    
     with col1:
         for i in (17, 12, 5):
-            print_image(index=i)            
+            features = print_image(index=i)     
+            keep_index = i       
             if st.button("prédire", key=i):
-                pred = send_sql_table_2_tables(index=i)
+                pred = execute_model(features=features, model=model)
                 finish=True
                 
     with col2:
         for i in (0, 10, 44):
-            print_image(index=i)
+            features = print_image(index=i)
+            keep_index = i    
             if st.button("prédire", key=i):
-                pred = send_sql_table_2_tables(index=i)
+                pred = execute_model(features=features, model=model)
                 finish=True
     
     with col3:
         for i in (4, 50, 2):
-            print_image(index=i)            
+            features = print_image(index=i)   
+            keep_index = i             
             if st.button("prédire", key=i):
-                pred = send_sql_table_2_tables(index=i)
+                pred = execute_model(features=features, model=model)
                 finish=True
     
-    # Affichage du résultat.
     if finish:
+        
+        # Affichage du résultat.
         st.title("Prédiction...")
         st.subheader(f"Le modèle à trouver !")
         CSS_picture(predict=pred)
-
+   
+        # On envoie les données en BDD.
+        send_sql_table_2_tables(
+            prediction = pred, 
+            index      = keep_index, 
+            features   = features, 
+            y_true     = "oui"
+        )
+        
 # =============================================================================
 
-# Fonction permettent de supprimer le contenu d'une table.
-def delete_table(table):
-    conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
-    cursor = conn.cursor()
-    delete_query = f"DELETE FROM {table};"
-    cursor.execute(delete_query)
-    conn.commit()
-    cursor.close()
-    conn.close()
-    
-# =============================================================================
-
+# Fonction permettent d'utiliser le modèle.
+def execute_model(features, model=model):
+    prediction = model.predict(((features).reshape((-1,28,28,1)))/255.0)
+    prediction = np.argmax(prediction, axis=1)
+    return prediction

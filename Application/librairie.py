@@ -7,86 +7,180 @@ import numpy as np
 import pymysql
 import pandas as pd
 
+# Import des utilitaires pour le modèle.
+import tensorflow as tf
+from tensorflow import keras
+from bdd_2_tables import send_sql_table_2_tables
 
-# Import de la data
+# =========================== Utilitaires ====================================>
+
+# Import de la data.
 x_train = pd.read_csv("C:/Users/Chems Ounissi/Desktop/CNN_projet/data/train.csv")
 x_test  = pd.read_csv("C:/Users/Chems Ounissi/Desktop/CNN_projet\data/test.csv")
 
 # connexion à la base de données.
 conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
 
+# importation du modèle 
+model = tf.keras.models.load_model("C:/Users/Chems Ounissi/Desktop/CNN_projet/my_model2.h5")
+
+# =========================== Les fonctions ====================================>
+
 # Fonction permettent de créer une table.
-# La fonction prend en paramètre le nom de la table et le nom de la base de données.
 def create_table(table_name:str, name_bdd:str):  
-    
-    # connexion à la base de données.
     engine=create_engine(f'mysql+pymysql://root:@localhost/{name_bdd}')
     inspector=inspect(engine)
-    
-    # Si la table n'existe pas on la créer.
     if not table_name in inspector.get_table_names():
-        
-        # Initialisation des 784 colonnes (pixels).
         df = pd.DataFrame({f'pixel{i}':[] for i in range(0,784)})
-        
-        # Typage des colonnes de la Table SQL.
         for i in df:
             df[i]=df[i].astype('int64')
-            
-        # Insérer la Target en première position.
         label = ''
         df.insert(loc=0, column='label', value=label)
-        
-        # envoie du DataFrame sur SQL.
         df.to_sql(name=table_name, con=engine, if_exists='fail', index=False)
-        
-    # Message pour l'utilisateur. 
     print(f"Création de la table {table_name} avec succès.")
-    
 
+# =============================================================================>
+   
+# Fonction : permettent d'afficher une image sur notre site web.
+def print_image(index:int, test=x_test):
+    style = """
+    img {
+        border-radius: 5px;
+        transition: transform 0s ease-in-out;
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+    }
     
-# Fonction : permettent d'envoyer l'image choisis en BDD.
-# La fonction prend en paramètre : l'index de l'image, le test_set, et la connexion à la BDD.
-def send_sql_table(index:int, test=x_test):
-    
+    img:hover {
+        transform: scale(1.1);
+    }
+    """
+    test = np.array(test)
+    img  = test[index]
+    img  = img.reshape((28, 28))
+    st.write(f'<style>{style}</style>', unsafe_allow_html=True)
+    st.image(img, width=80)
+
+# =============================================================================>
+   
+# Fonction : permettent d'envoyer l'image choisis en BDD et d'éxécuter le modèle.
+def send_sql_table(index:int, test=x_test, model=model):
+
     conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
-    
-    # On saisit l'image d'index dans le test set.
     test  = np.array(test)
     features = test[index]
     cursor = conn.cursor()
     
-    # Placement des colonnes de la table pour la requete.
+    prediction = model.predict(((features).reshape((-1,28,28,1)))/255.0)
+    prediction = np.argmax(prediction, axis=1)
+    
     columns_table=[]
     for i in range(len(features)):
         columns_table.append(f"pixel{i}")
     columns_table.insert(0, "label")
     
-    # Placement des valeurs de la table pour la requete.
     values_table=[]
     for i in features:
         values_table.append(str(i))
-    values_table.insert(0, "2")
+    values_table.insert(0, prediction.item())
     
-    # On envoie les données de l'image choisis dans la table de notre bdd.
     sql = f"INSERT INTO picture_predict ({', '.join(columns_table)}) VALUES ({', '.join(['%s' for i in range(785)])})"
     cursor.execute(sql, values_table)
     conn.commit()
     conn.close()
     
-# Fonction : permettent d'afficher une image sur notre site web.
-# La fonction prend en paramètre : l'index de l'image, le test set, et la clé identificateur du bouton.
-def print_image(index:int, test=x_test, n_image=int):
+    return prediction
+
+# =============================================================================>
+
+# Fonction permettent de placer une image de fond pour site web.
+def background(url:str):
+    st.markdown(
+         f"""
+         <style>
+         .stApp {{
+             background-image: url({url});
+             background-attachment: fixed;
+             background-size: cover
+         }}
+         </style>
+         """,
+         unsafe_allow_html=True
+    )
+
+# =============================================================================>
+
+# Fonction permettent de charger des images en local.
+def CSS_picture(predict):
+    picture = f"image pred/{predict.item()}.jpg"
+    st.write(unsafe_allow_html=False)
+    st.image(picture, width=300)
+
+# =============================================================================>
+
+# Fonction permettent d'apporter du CSS à nos pages
+def css_page():
+    st.markdown("""
+    <style>
+        body {
+        background-image: url("data:image/png;base64,%s");
+        background-size: cover;
+        }
+        
+        h1 {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #FD942F;
+            text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+    </style>
+    """, unsafe_allow_html=True)
+
+# =============================================================================>
+
+# Fonction permettent d'afficher les images
+def column_picture():
     
-    # Création de l'image
-    test = np.array(test)
-    img  = test[index]
-    img  = img.reshape((28, 28))
+    # Affichage des images.
+    col1, col2, col3 = st.columns(3)
+    finish=False
+    with col1:
+        for i in (17, 12, 5):
+            print_image(index=i)            
+            if st.button("prédire", key=i):
+                pred = send_sql_table_2_tables(index=i)
+                finish=True
+                
+    with col2:
+        for i in (0, 10, 44):
+            print_image(index=i)
+            if st.button("prédire", key=i):
+                pred = send_sql_table_2_tables(index=i)
+                finish=True
     
-    # Affichage de l'image avec le bouton
-    st.image(img, width=80)
+    with col3:
+        for i in (4, 50, 2):
+            print_image(index=i)            
+            if st.button("prédire", key=i):
+                pred = send_sql_table_2_tables(index=i)
+                finish=True
     
-    # Si l'utilisateur clique sur le bouton, on envoie la data dans la table en BDD.
-    if st.button('choisir', key=f'image_{n_image}'):
-        send_sql_table(index=index, test=x_test)
-        #st.write(f"Vous avez choisi image d'index {n_image}.")
+    # Affichage du résultat.
+    if finish:
+        st.title("Prédiction...")
+        st.subheader(f"Le modèle à trouver !")
+        CSS_picture(predict=pred)
+
+# =============================================================================
+
+# Fonction permettent de supprimer le contenu d'une table.
+def delete_table(table):
+    conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
+    cursor = conn.cursor()
+    delete_query = f"DELETE FROM {table};"
+    cursor.execute(delete_query)
+    conn.commit()
+    cursor.close()
+    conn.close()
+    
+# =============================================================================
+

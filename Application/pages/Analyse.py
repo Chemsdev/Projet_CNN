@@ -45,7 +45,7 @@ def analyse():
     if data:
         
         # Titre de la sous-page.
-        st.title(f"Analyse des Prédictions")
+        st.title("Analyse des Prédictions")
         
         # ========== Graphique 1 ========== #
         st.subheader('Les Prédictions réaliser')
@@ -58,10 +58,11 @@ def analyse():
         st.image('countplot.png')  
         st.markdown(f"**Vous avez fait {df_final.shape[0]} prédictions(s)** !")
         
+        st.title('Performance du Canvas')
+        # ...
+        
     # Sinon on renvoie un message d'erreur.
     else:
         st.error("Visualisation non disponible.")
         
 analyse()
-
-

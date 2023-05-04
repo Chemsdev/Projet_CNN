@@ -9,6 +9,7 @@ import random
 # Import des utilitaires pour le modèle.
 import tensorflow as tf
 from tensorflow import keras
+
 # =========================== Utilitaires =======================================>
 
 # Import de la data.

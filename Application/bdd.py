@@ -106,14 +106,12 @@ def send_sql_table_2_tables(prediction, index:int, features, y_true):
 # =============================================================================>
 
 # Fonction permettent de supprimer 2 tables.
-def delete_content_tables(table:str):
+def delete_content_tables():
     conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
     cursor = conn.cursor()
-    if table =="pred":
-        cursor.execute("DELETE FROM predictions")
-        cursor.execute("DELETE FROM images")
-    else:
-        cursor.execute("DELETE FROM canvas")
+    cursor.execute("DELETE FROM predictions")
+    cursor.execute("DELETE FROM images")
+    cursor.execute("DELETE FROM canvas")
     conn.commit()
     cursor.close()
     conn.close()

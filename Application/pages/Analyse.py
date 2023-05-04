@@ -41,10 +41,6 @@ def analyse():
         df_final = df_final.drop(["id_x", "id_y","image_id"], axis=1)
         st.write(df_final.head())
         data=True
-        
-    # Bouton pour supprimer les données. 
-    if st.button("Supprimer les données", key="pred"):
-        delete_content_tables(table="pred")
     
     # Si les tables ne sont pas vide, on affiche l'analyse.
     if data:
@@ -81,10 +77,6 @@ def analyse():
         st.subheader("Table Canvas")
         st.write(table_canvas)
             
-        # Bouton pour supprimer les données. 
-        if st.button("Supprimer les données",  key="canvas"):
-            delete_content_tables(table="canvas")
-            
         # Vérification de la quantité de la data pour le graphique.
         if table_canvas.empty or table_canvas.shape[0] < 5:
             st.warning("Pas assez de données...")
@@ -114,6 +106,10 @@ def analyse():
     # Sinon on renvoie un message d'erreur.
     else:
         st.error("Visualisation non disponible.")
+           
+    # Bouton pour supprimer les données. 
+    if st.button("Supprimer les données", key="pred"):
+        delete_content_tables()
         
 analyse()
 

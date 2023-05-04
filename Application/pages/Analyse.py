@@ -63,8 +63,16 @@ def analyse():
         st.image('countplot.png')  
         st.markdown(f"**Vous avez fait {df_final.shape[0]} prédiction(s)** !")
         
+        # ========== Graphique 2 (Prédictions) =============== #
+        st.subheader('Les Performances du Modèle')
+        nb_oui = df_final[df_final["y_true"] == "oui"].shape[0]
+        nb_non = df_final[df_final["y_true"] == "non"].shape[0]
+        fig, ax = plt.subplots()
+        ax.bar(["Bonne prédiction", "Mauvaise prédiction"], [nb_oui, nb_non],  color=["#80ff80", "#ff8080"])
+        st.pyplot(fig)
+        
         # ============================================== CANVAS STATS  ======================================== #
-        st.title('Performance Canvas Modèle')
+        st.title('Le modèle avec Canvas')
         
         # Récupération de la data
         table_canvas = pd.read_sql_query("SELECT * FROM canvas ", conn)
@@ -75,20 +83,32 @@ def analyse():
             
         # Bouton pour supprimer les données. 
         if st.button("Supprimer les données",  key="canvas"):
-            delete_content_tables(table="pred")
+            delete_content_tables(table="canvas")
             
         # Vérification de la quantité de la data pour le graphique.
         if table_canvas.empty or table_canvas.shape[0] < 5:
             st.warning("Pas assez de données...")
             
-        # Affichage de la table
-        else:                    
-            # ========== Graphique 2 =============== #
+        else:    
+            
+            # ========== Graphique 1 (canvas) ================ #  
+            st.subheader('Les Performances du modèle avec Canvas')              
             nb_oui = table_canvas[table_canvas["y_true"] == "Oui"].shape[0]
             nb_non = table_canvas[table_canvas["y_true"] == "Non"].shape[0]
             fig, ax = plt.subplots()
-            ax.bar(["Bonne prédiction", "Mauvaise prédiction"], [nb_oui, nb_non])
+            ax.bar(["Bonne prédiction", "Mauvaise prédiction"], [nb_oui, nb_non],  color=["#80ff80", "#ff8080"])
             st.pyplot(fig)
+            st.markdown(f"**Vous avez fait {table_canvas.shape[0]} prédiction(s)** !")
+            
+            # ========== Graphique 2 (Canvas)========== #
+            st.subheader('Les Prédictions réalisées')
+            sns.set_style('dark')
+            fig, ax = plt.subplots()  
+            sns.countplot(x='y_pred', data=table_canvas, ax=ax)  
+            plt.xlabel("Les cibles prédites")
+            plt.ylabel("Compte des cibles prédites")
+            plt.savefig('countplot.png')  
+            st.image('countplot.png')  
             st.markdown(f"**Vous avez fait {table_canvas.shape[0]} prédiction(s)** !")
 
     # Sinon on renvoie un message d'erreur.

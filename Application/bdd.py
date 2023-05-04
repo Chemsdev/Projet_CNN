@@ -24,7 +24,6 @@ model = tf.keras.models.load_model("C:/Users/Chems Ounissi/Desktop/CNN_projet/my
 
 # =========================== Les fonctions ====================================>
 
-
 # Fonction permettent de créer 2 tables.
 def create_tables_2_tables(name_bdd: str):
     
@@ -58,7 +57,6 @@ def create_tables_2_tables(name_bdd: str):
 # Fonction permettent d'éxécuter le modèle et d'enregistrer les données dans 2 tables.
 def send_sql_table_2_tables(prediction, index:int, features, y_true):
     
-    
     # connexion à la bdd.
     conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
     cursor = conn.cursor()
@@ -83,7 +81,6 @@ def send_sql_table_2_tables(prediction, index:int, features, y_true):
     # =============================== MISE EN PLACE TABLE PREDICTIONS ===============================>
     
     # Préparation des données à l'envoie.
-    
     columns_table =  ["id",     "index_image",  "y_true",   "y_pred",                "image_id"]
     
     if int(y_true) == int(prediction.item()):
@@ -91,7 +88,6 @@ def send_sql_table_2_tables(prediction, index:int, features, y_true):
     else:
         values_table  =  [code_id,   index,          "non",     str(prediction.item()),  code_id  ]  
         
-    
     # Insertion des résultats dans la table predictions.
     sql = f"INSERT INTO predictions ({', '.join(columns_table)}) VALUES ({', '.join(['%s' for i in range(5)])})"
     cursor.execute(sql, values_table)

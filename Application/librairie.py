@@ -101,6 +101,7 @@ def column_picture():
     finish=False
     keep_index=0
     
+    # l'utilisateur choisis un chiffre.
     options=[1,2,3,4,5,6,7,8,9]
     y_true = st.selectbox("Veuillez saisir le chiffre que vous allez choisir", options)
     
@@ -130,7 +131,6 @@ def column_picture():
                 
     if finish:
         
-    
         # Affichage du résultat.
         st.title("Prédiction...")
         st.subheader("Le modèle à trouver !")

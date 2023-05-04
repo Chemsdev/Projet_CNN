@@ -101,43 +101,47 @@ def column_picture():
     finish=False
     keep_index=0
     
+    options=[1,2,3,4,5,6,7,8,9]
+    y_true = st.selectbox("Veuillez saisir le chiffre que vous allez choisir", options)
+    
     with col1:
         for i in (17, 12, 5):
             features = print_image(index=i)     
-            keep_index = i       
             if st.button("prédire", key=i):
                 pred = execute_model(features=features, model=model)
+                keep_index = i       
                 finish=True
                 
     with col2:
         for i in (0, 10, 44):
-            features = print_image(index=i)
-            keep_index = i    
+            features = print_image(index=i)   
             if st.button("prédire", key=i):
                 pred = execute_model(features=features, model=model)
+                keep_index = i 
                 finish=True
     
     with col3:
         for i in (4, 50, 2):
             features = print_image(index=i)   
-            keep_index = i             
             if st.button("prédire", key=i):
                 pred = execute_model(features=features, model=model)
+                keep_index = i             
                 finish=True
-    
+                
     if finish:
         
+    
         # Affichage du résultat.
         st.title("Prédiction...")
         st.subheader(f"Le modèle à trouver !")
         CSS_picture(predict=pred)
-   
+        
         # On envoie les données en BDD.
         send_sql_table_2_tables(
             prediction = pred, 
             index      = keep_index, 
             features   = features, 
-            y_true     = "oui"
+            y_true     = y_true
         )
         
 # =============================================================================

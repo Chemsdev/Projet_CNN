@@ -67,7 +67,7 @@ def canvas(x_test=x_test, model=model):
     css_page()
     
     # Accueil (titre et message)
-    st.title("Dessine un nombre !")
+    st.title("Dessine un chiffre !")
     
     options=[0,1,2,3,4,5,6,7,8,9]
     y_true = st.selectbox("Veuillez saisir le chiffre que vous allez dessiner", options)

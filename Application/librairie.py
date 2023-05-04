@@ -133,7 +133,7 @@ def column_picture():
     
         # Affichage du résultat.
         st.title("Prédiction...")
-        st.subheader(f"Le modèle à trouver !")
+        st.subheader("Le modèle à trouver !")
         CSS_picture(predict=pred)
         
         # On envoie les données en BDD.

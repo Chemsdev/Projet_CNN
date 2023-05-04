@@ -48,7 +48,7 @@ def analyse():
         # Titre de la sous-page.
         st.title("Analyse des Prédictions")
         
-        # ========== Graphique 1 (Prédictions)========== #
+        # ========== Graphique 1 (Prédictions)================= #
         st.subheader('Les Prédictions réalisées')
         sns.set_style('dark')
         fig, ax = plt.subplots()  
@@ -79,7 +79,7 @@ def analyse():
             
         # Vérification de la quantité de la data pour le graphique.
         if table_canvas.empty or table_canvas.shape[0] < 5:
-            st.warning("Pas assez de données...")
+            st.warning("Visualisation Indisponible, pas assez de données.")
             
         else:    
             
@@ -108,7 +108,7 @@ def analyse():
         st.error("Visualisation non disponible.")
            
     # Bouton pour supprimer les données. 
-    if st.button("Supprimer les données", key="pred"):
+    if st.button("Supprimer toutes données", key="pred"):
         delete_content_tables()
         
 analyse()

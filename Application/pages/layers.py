@@ -33,11 +33,13 @@ def layers(model=model):
   # affichage du background.
   background(url="https://wallpaper.dog/large/10707630.jpg")
 
-
+  # Titre de la page.
   st.title("Visualisation des couches ")
 
+  # Sous-titre de la page.
   st.subheader("Dessine un chiffre !")
 
+  # Affichage du canvas
   canvas_result = st_canvas(
       height=300,width=400,
       fill_color='#ffffff', background_color='#000000',
@@ -48,8 +50,9 @@ def layers(model=model):
 
   if canvas_result.image_data is not None :
     img = cv2.resize(canvas_result.image_data.astype('uint8'),(28,28))
-    
-  if st.button('predict') :
+  
+  # Action du bouton predict.
+  if st.button('prédire') :
     x_test = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     pred = execute_model(features=x_test, model=model)
 
@@ -84,7 +87,4 @@ def layers(model=model):
                 plt.imshow( display_grid, aspect='auto', cmap='viridis' )
                 st.pyplot(fig)
   
- 
-
-
 layers()

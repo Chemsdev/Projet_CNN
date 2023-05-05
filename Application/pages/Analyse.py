@@ -11,7 +11,6 @@ from bdd import delete_content_tables
 # connexion à la base de données.
 conn=pymysql.connect(host='localhost', port=int(3306), user='root', passwd='', db='neuronal_convolutif')
 
-
 def analyse():
     
     # Apporter du CSS à ma page.
@@ -57,7 +56,7 @@ def analyse():
         plt.ylabel("Compte des cibles prédites")
         plt.savefig('countplot.png')  
         st.image('countplot.png')  
-        st.markdown(f"**Vous avez fait {df_final.shape[0]} prédiction(s)** !")
+        st.markdown(f"**Vous avez réalisé {df_final.shape[0]} prédiction(s)** !")
         
         # ========== Graphique 2 (Prédictions) =============== #
         st.subheader('Les Performances du Modèle')
@@ -90,7 +89,6 @@ def analyse():
             fig, ax = plt.subplots()
             ax.bar(["Bonne prédiction", "Mauvaise prédiction"], [nb_oui, nb_non],  color=["#80ff80", "#ff8080"])
             st.pyplot(fig)
-            st.markdown(f"**Vous avez fait {table_canvas.shape[0]} prédiction(s)** !")
             
             # ========== Graphique 2 (Canvas)========== #
             st.subheader('Les Prédictions réalisées')
@@ -101,14 +99,14 @@ def analyse():
             plt.ylabel("Compte des cibles prédites")
             plt.savefig('countplot.png')  
             st.image('countplot.png')  
-            st.markdown(f"**Vous avez fait {table_canvas.shape[0]} prédiction(s)** !")
+            st.markdown(f"**Vous avez dessiné {table_canvas.shape[0]} chiffre(s)** !")
 
     # Sinon on renvoie un message d'erreur.
     else:
         st.error("Visualisation non disponible.")
            
     # Bouton pour supprimer les données. 
-    if st.button("Supprimer toutes données", key="pred"):
+    if st.button("Supprimer toutes les données", key="pred"):
         delete_content_tables()
         
 analyse()

@@ -96,7 +96,7 @@ def css_page():
 # Fonction permettent d'afficher les images et le résultat de la prédiction.
 def column_picture():
     
-    # Affichage des images.
+    # Mise en place des colonnes.
     col1, col2, col3 = st.columns(3)
     finish=False
     keep_index=0
@@ -105,6 +105,7 @@ def column_picture():
     options=[1,2,3,4,5,6,7,8,9]
     y_true = st.selectbox("Veuillez saisir le chiffre que vous allez choisir", options)
     
+    # Affichage des images.
     with col1:
         for i in (17, 12, 5):
             features = print_image(index=i)     
@@ -151,3 +152,5 @@ def execute_model(features, model=model):
     prediction = model.predict(((features).reshape((-1,28,28,1)))/255.0)
     prediction = np.argmax(prediction, axis=1)
     return prediction
+
+

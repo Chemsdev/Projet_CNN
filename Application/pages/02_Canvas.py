@@ -45,9 +45,9 @@ def bdd_canvas(y_pred, y_true):
     # Préparation des données à l'envoie.
     columns_table =  [ "id",      "y_true",      "y_pred"]
     if int(y_true) == int(y_pred.item()):
-        values_table  =  [code_id,     "Oui",        y_pred.item()]  
+        values_table  =  [code_id,     "Oui",    y_pred.item()]  
     else:
-        values_table  =  [code_id,     "Non",        y_pred.item()]  
+        values_table  =  [code_id,     "Non",    y_pred.item()]  
 
     # Insertion des résultats dans la table predictions.
     sql = f"INSERT INTO canvas ({', '.join(columns_table)}) VALUES ({', '.join(['%s' for i in range(3)])})"

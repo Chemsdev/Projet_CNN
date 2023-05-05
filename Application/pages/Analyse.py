@@ -82,7 +82,7 @@ def analyse():
             
         else:    
             
-            # ========== Graphique 1 (canvas) ================ #  
+            # ========== Graphique 1 (Canvas) ================ #  
             st.subheader('Les Performances du modèle avec Canvas')              
             nb_oui = table_canvas[table_canvas["y_true"] == "Oui"].shape[0]
             nb_non = table_canvas[table_canvas["y_true"] == "Non"].shape[0]

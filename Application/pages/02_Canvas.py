@@ -41,7 +41,6 @@ def bdd_canvas(y_pred, y_true):
     
     # On génère code id unique.
     code_id = "".join([str(random.randint(0, 10)) for _ in range(3)]) 
-    
      
     # Préparation des données à l'envoie.
     columns_table =  [ "id",      "y_true",      "y_pred"]
@@ -70,7 +69,7 @@ def canvas(x_test=x_test, model=model):
     st.title("Dessine un chiffre !")
     
     options=[0,1,2,3,4,5,6,7,8,9]
-    y_true = st.selectbox("Veuillez saisir le chiffre que vous allez dessiner", options)
+    y_true = st.selectbox("Veuillez sélectionner le chiffre que vous allez dessiner.", options)
         
     # Mise en place du canvas
     canvas_result = st_canvas(
